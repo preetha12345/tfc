@@ -1,32 +1,8 @@
-provider "aws" {
-  region = var.aws_region
-}
+def extractVersion(versionString) {
+    // Updated regex pattern to handle different formats
+    def regex = ~/jdk(?:-(\d+)(?:\.(\d+)(?:\.(\d+))?)?)?(?:_(u(\d+)))?/
 
-provider "random" {}
-
-resource "random_pet" "table_name" {}
-
-resource "aws_dynamodb_table" "tfc_example_table" {
-  name = "${var.db_table_name}-${random_pet.table_name.id}"
-
-  read_capacity  = var.db_read_capacity
-  write_capacity = var.db_write_capacity
-  hash_key       = "UUID"
-
-  attribute {
-    name = "UUID"
-    type = "S"
-  }
-}
-def versions = [
-    "D:\\Apps\\Java\\jdk17.0",
-    "D:\\Apps\\Java\\jdk-11.0.21",
-    "D:\\Apps\\Java\\jdk17.0.0_401"
-]
-
-def regex = ~/jdk(?:-(\d+)(?:\.(\d+)(?:\.(\d+))?)?)?(?:_(u(\d+)))?/
-
-versions.each { versionString ->
+    // Match the version string against the regex
     def matcher = versionString =~ regex
     if (matcher) {
         matcher.each { match ->
@@ -34,7 +10,17 @@ versions.each { versionString ->
             def minor = match[2] ?: ''
             def patch = match[3] ?: ''
             def build = match[4] ?: ''
-            println "Version: ${major}.${minor}${minor ? '.' : ''}${patch}${build ? 'u' + build : ''}"
+
+            // Format the version string
+            def version = "${major}.${minor}${minor ? '.' : ''}${patch}${build ? 'u' + build : ''}"
+            return version
         }
+    } else {
+        return "No version found"
     }
 }
+
+// Example usage
+def versionString = "D:\\Apps\\Java\\jdk11.0"  // Replace with the actual input
+def version = extractVersion(versionString)
+println "Version: ${version}"
