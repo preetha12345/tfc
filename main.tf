@@ -1,26 +1,24 @@
-def extractVersion(versionString) {
-    // Updated regex pattern to handle different formats
-    def regex = ~/jdk(?:-(\d+)(?:\.(\d+)(?:\.(\d+))?)?)?(?:_(u(\d+)))?/
+// Define parameters
+def clientoolname = "sonar"
+def Sonarclinet = "client"
 
-    // Match the version string against the regex
-    def matcher = versionString =~ regex
-    if (matcher) {
-        matcher.each { match ->
-            def major = match[1] ?: ''
-            def minor = match[2] ?: ''
-            def patch = match[3] ?: ''
-            def build = match[4] ?: ''
-
-            // Format the version string
-            def version = "${major}.${minor}${minor ? '.' : ''}${patch}${build ? 'u' + build : ''}"
-            return version
+// Function to determine the default value based on the OS
+def getDefaultValue() {
+    // Check if either parameter has a value
+    if (clientoolname?.trim() || Sonarclinet?.trim()) {
+        // Check the OS
+        def os = System.getProperty("os.name").toLowerCase()
+        if (os.contains("win")) {
+            return "windows_sonar_default"
+        } else if (os.contains("nix") || os.contains("nux") || os.contains("mac")) {
+            return "linux_sonar_default"
+        } else {
+            return "unknown_os_default"
         }
     } else {
-        return "No version found"
+        return "no_param_default"
     }
 }
 
-// Example usage
-def versionString = "D:\\Apps\\Java\\jdk11.0"  // Replace with the actual input
-def version = extractVersion(versionString)
-println "Version: ${version}"
+// Print the result
+println getDefaultValue()
