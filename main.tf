@@ -3,6 +3,11 @@ def processedMap = branchStage.collectEntries { branch, settings -> [branch, set
 branchStage.each { branch, settings -> settings.each { k, v -> settings[k] = (v == '1' || v.equalsIgnoreCase('yes')) ? true : (v == '0' || v.equalsIgnoreCase('no') ? false : v) } }
 
 def updatedMap = branchStage.collectEntries { branch, settings -> [branch, settings.collectEntries { k, v -> [k, (v == '1' || v.equalsIgnoreCase('yes')) ? true : (v == '0' || v.equalsIgnoreCase('no') ? false : v)] }] }
+def updatedMap = branchStage.collectEntries { branch, settings -> 
+    [branch, settings.collectEntries { k, v -> 
+        [k, (v == '1' || v?.toLowerCase() == 'yes') ? true : (v == '0' || v?.toLowerCase() == 'no' ? false : v)] 
+    }] 
+}
 
 
 
