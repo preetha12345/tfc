@@ -1,3 +1,9 @@
+
+def processedMap = branchStage.collectEntries { branch, settings -> [branch, settings.collectEntries { k, v -> [k, (v == '1' || v.equalsIgnoreCase('yes'))] }] } }
+
+
+
+
 // Define parameters
 def clientoolname = "sonar"
 def Sonarclinet = "client"
