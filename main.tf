@@ -1,3 +1,17 @@
+
+Was
+
+315071205635
+
+
+
+AKIAUSW5VCEB22K3TSUQ
+
+qKxZSjauYglIQmRMDimmVrqkmjmE4oVlCHud8+ot
+
+
+
+
 def updatedMap = branchStage.collectEntries { branch, settings -> 
     [branch, settings.collectEntries { k, v -> 
         [k, (v == '1' || (v instanceof String && v.equalsIgnoreCase('yes'))) ? true : 
